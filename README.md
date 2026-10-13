@@ -30,7 +30,7 @@ searcher's own acquisition criteria, showing its working at every step.
    owner, website                          ↓
         ↓                            explainable fit scoring
    hours of research                       ↓
-        ↓                            14 HIGH-fit targets, ranked
+        ↓                            21 HIGH-fit targets, ranked
    a shortlist                             ↓
                                       a shortlist — in seconds
 ```
