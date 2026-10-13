@@ -1,0 +1,286 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens.
+ *
+ * The product is a working surface for people reading dense tables for long
+ * stretches, so the visual system is deliberately quiet: one neutral scale, one
+ * data hue, and semantic colour reserved for state that is also stated in words.
+ */
+:root {
+  --surface:        #141414;
+  --surface-sunken: #0a0a0a;
+  --border:         #2a2a2a;
+  --border-strong:  #3a3a3a;
+  /* A panel nested inside a .card — one step lighter than the card it sits on,
+     so depth reads without a shadow. */
+  --surface-raised: #1c1c1c;
+  --hairline:       #2a2a2a;
+  /* Chart grid. Recessive by design: it is a reading aid, not data. */
+  --hairline-soft:  #242424;
+
+  --text-primary:   #ffffff;
+  --text-secondary: #d0d0d0;
+  --text-muted:     #8e8e88;
+  --brand:          #f9d360;
+  --brand-active:   #efc13e;
+  --brand-soft:     #fffbea;
+
+  /* Status roles. Always paired with a text label — colour never carries
+     meaning on its own, which is what makes the green/amber pair safe for
+     red-green colour blindness. */
+  --status-good:     #0f7a3d;
+  --status-good-bg:  #eaf6ef;
+  --status-warn:     #92590a;
+  --status-warn-bg:  #fdf4e3;
+  --status-risk:     #a8322f;
+  --status-risk-bg:  #fbeceb;
+  --status-idle:     #49536b;
+  --status-idle-bg:  #eef0f4;
+
+  --chart-grid:     #e9e9ed;
+  --chart-axis:     #c8c8d0;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--surface-sunken);
+  background-image: linear-gradient(180deg, #0a0a0a 0%, #111111 46%, #0a0a0a 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: rgb(249 211 96 / 0.55); color: #0a0a0a; }
+
+* { scrollbar-color: #c7c7cf transparent; scrollbar-width: thin; }
+
+input[type='checkbox'], input[type='radio'] { accent-color: #b88908; }
+
+/* Numbers in tables must align vertically to be scannable. */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Visible focus for keyboard users, suppressed for mouse users. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--data-400, #efc13e);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@layer components {
+  .card {
+    @apply border rounded-xl;
+    background: rgb(20 20 20 / 0.96);
+    border-color: #2a2a2a;
+    backdrop-filter: blur(12px);
+  }
+  /* A card that is also a surface the user can act on. The lift is 1px —
+     enough to read as responsive, not enough to shift the layout. */
+  /*
+   * A panel nested inside a card.
+   *
+   * Authored against the theme tokens rather than `bg-ink-50/60`, because the
+   * dark theme is applied by overriding `ink` utility classes (see the override
+   * block below) and an opacity modifier compiles to a DIFFERENT class name
+   * that those overrides do not match — so `bg-ink-50/60` silently fell through
+   * to the original near-white and produced light boxes on a dark card.
+   */
+  .panel-nested {
+    background: var(--surface-raised);
+    border: 1px solid var(--hairline);
+    @apply rounded-xl transition-colors duration-200;
+  }
+  .panel-nested:hover {
+    border-color: var(--border-strong);
+  }
+  .card-interactive {
+    @apply card transition-[border-color,transform] duration-300
+           hover:border-data-300/60 hover:-translate-y-0.5;
+  }
+  .field-label {
+    @apply block text-xs font-semibold text-ink-600 mb-1.5;
+  }
+  .field {
+    @apply w-full h-10 px-3 text-sm border rounded-lg
+           hover:border-ink-400 focus:border-data-500 focus:ring-4 focus:ring-data-500/10
+           outline-none transition-colors disabled:text-ink-400;
+    background: #1a1a1a;
+    border-color: #3a3a3a;
+    color: #ffffff;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold
+           rounded-lg border transition-all duration-200 whitespace-nowrap
+           disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-data-300 border-data-300 text-ink-950 hover:bg-data-400 hover:border-data-400 hover:-translate-y-px;
+  }
+  .btn-secondary {
+    @apply btn hover:-translate-y-px;
+    background: #1a1a1a;
+    border-color: #3a3a3a;
+    color: #ffffff;
+  }
+  .btn-secondary:hover {
+    background: #f9d360;
+    border-color: #f9d360;
+    color: #0a0a0a;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent border-transparent;
+    color: #d0d0d0;
+  }
+  .btn-ghost:hover {
+    background: rgb(249 211 96 / 0.10);
+    color: #f9d360;
+  }
+  .th {
+    @apply px-3 py-3 text-left text-2xs font-bold uppercase tracking-[0.12em] border-b whitespace-nowrap;
+    background: #101010;
+    border-color: #2a2a2a;
+    color: #b0b0b0;
+  }
+  .td {
+    @apply px-3 py-3 text-sm border-b align-middle;
+    border-color: #242424;
+    color: #d0d0d0;
+  }
+}
+
+.luxury-rule {
+  height: 1px;
+  background: linear-gradient(90deg, var(--brand), rgb(249 211 96 / 0.20), transparent);
+}
+
+.chart-track {
+  background: linear-gradient(90deg, #242424, #303030);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.45);
+}
+
+.chart-bar {
+  background: linear-gradient(90deg, #8b6500 0%, #d8a719 55%, #f9d360 100%);
+}
+
+/*
+ * Dark application surfaces. White is reserved for readable text only.
+ *
+ * ⚠ These overrides match EXACT utility class names. An opacity modifier
+ * (`bg-ink-50/60`, `border-ink-200/80`) compiles to a different class and is
+ * NOT caught here — it falls through to the light-first value in
+ * tailwind.config.js. Use the semantic tokens or `.panel-nested` instead of an
+ * `ink` utility with a slash, or the element renders light on a dark surface.
+ *
+ * The real fix is to invert the `ink` scale in the Tailwind config and delete
+ * this block; it is kept as-is here only because that is a whole-app refactor.
+ */
+.text-ink-950, .text-ink-900 { color: #ffffff; }
+.text-ink-800 { color: #f0f0ec; }
+.text-ink-700 { color: #e0e0dc; }
+.text-ink-600 { color: #d0d0d0; }
+.text-ink-500 { color: #b0b0b0; }
+.text-ink-400 { color: #8e8e88; }
+.text-ink-300 { color: #6f6f69; }
+.bg-ink-50 { background-color: #1a1a1a; }
+.bg-ink-100 { background-color: #242424; }
+.bg-ink-200 { background-color: #303030; }
+.border-ink-100, .border-ink-200 { border-color: #2a2a2a; }
+.border-ink-300 { border-color: #3a3a3a; }
+.divide-ink-100 > :not([hidden]) ~ :not([hidden]) { border-color: #2a2a2a; }
+.hover\:bg-ink-50:hover, .hover\:bg-ink-50\/70:hover { background-color: #202020; }
+.hover\:bg-ink-100:hover { background-color: #2a2a2a; }
+.bg-data-300.text-ink-950, .btn-primary { color: #0a0a0a; }
+.bg-data-50.text-data-700, .bg-data-50.text-data-800 { color: #5c4300; }
+.text-data-600, .text-data-700, .text-data-800 { color: #f9d360; }
+.bg-data-50.text-data-700, .bg-data-50.text-data-800 { color: #5c4300; }
+.placeholder\:text-ink-400::placeholder { color: #7c7c78; }
+select { background-color: #1a1a1a; color: #ffffff; }
+
+
+/*
+ * Motion.
+ *
+ * The rule applied throughout: motion is only used to say something about
+ * state — content has just arrived, a value was just computed, a control
+ * responds. Nothing moves for decoration, nothing loops, and nothing delays
+ * the user getting to the data. Durations stay under 350ms.
+ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/*
+ * Chart marks grow from zero.
+ *
+ * These keyframes declare only a `from`. The implicit `to` is the element's own
+ * computed width/height, which makes the animation purely additive: the bar is
+ * authored at its real size, and if the animation never runs — reduced motion,
+ * a background tab, an old engine — the data still renders correctly.
+ *
+ * An earlier version drove this from requestAnimationFrame state instead, and
+ * rAF does not fire in a hidden tab, so the charts rendered permanently empty.
+ * Animation must never be a precondition for the data appearing.
+ *
+ * Width and height are animated rather than `transform: scale`, because scaling
+ * a pill-shaped bar squashes its rounded end into an ellipse.
+ */
+@keyframes grow-x { from { width: 0; } }
+@keyframes grow-y { from { height: 0; } }
+
+.animate-rise {
+  animation: rise 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade {
+  animation: fade 260ms ease-out both;
+}
+
+/*
+ * `backwards`, not `both`.
+ *
+ * The fill is only needed during the stagger delay, to hold a mark at zero
+ * until its turn. Once the animation ends the element falls back to its own
+ * authored size, so the resting state is the real data rather than a fill value
+ * the animation happens to have left behind.
+ *
+ * Caveat worth knowing: a browser pauses animations in a fully hidden tab, and
+ * a paused animation still renders its start value — so marks sit at zero until
+ * the tab is looked at, then animate in. That is correct behaviour (nobody is
+ * reading a hidden tab) and it self-resolves on focus, but it is why automated
+ * capture of this page must happen with the tab visible.
+ */
+.animate-bar-x {
+  animation: grow-x 720ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.animate-bar-y {
+  animation: grow-y 720ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* Honour a reduced-motion preference — the UI has little motion to begin with. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    /* Delays must be zeroed too. The staggered entrances carry an
+       animation-delay of up to 320ms with `fill: both`, so clamping only the
+       duration would leave a reduced-motion viewer looking at invisible cards
+       for the length of the stagger — the opposite of the intent. */
+    animation-delay: 0ms !important;
+    transition-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

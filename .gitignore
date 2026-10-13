@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment — never commit real connection strings or secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Exports generated at runtime
+server/tmp/
+client/tsconfig.tsbuildinfo
+
+# Internal working documents — NEVER publish these.
+# CLAUDE.md contains private notes about the application and compensation
+# strategy; the prompt PDF is a working document. Both would be read by the
+# evaluator if committed to the public submission repo.
+CLAUDE.md
+*.pdf
+
+# Local editor / tooling config — repo mein nahi jaana chahiye
+.claude/
+.vscode/
+.idea/
+
+# Submission ke working files — ye email se jaate hain, GitHub pe nahi
+
+# ---------------------------------------------------------------------------
+# Private working material — must never reach the public repo.
+# Patterns are depth-independent on purpose: an earlier path-based rule broke
+# the moment these files were moved into a subfolder.
+# ---------------------------------------------------------------------------
+caprae/
+**/CLAUDE*.md
+**/INTERVIEW_NOTES.md
+**/VIDEO_SCRIPT.md
+**/SCRIPT_HINGLISH.md
+**/READ_ALOUD.md
+**/*.mp4
+**/*.mov
+**/.DS_Store

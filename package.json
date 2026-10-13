@@ -1,0 +1,16 @@
+{
+  "name": "caprae-lead-intelligence",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Acquisition-focused lead intelligence platform — explainable Acquisition Fit Scoring and data-health tooling for ETA / M&A searchers.",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "seed": "npm --prefix server run seed",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "test": "npm --prefix server test"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
